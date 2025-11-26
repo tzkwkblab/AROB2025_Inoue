@@ -4,7 +4,16 @@ Multi-agent reinforcement learning experimental environment using the Apple Deer
 
 ## Reproduction Steps
 
-### 1. Install Dependencies
+### 1. Clone the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/tzkwkblab/AROB2025_Inoue.git
+cd AROB2025_Inoue/apple_deer_AROB
+```
+
+### 2. Install Dependencies
 
 Install the required packages using the following command:
 
@@ -13,7 +22,7 @@ cd apple_deer_AROB
 pip install -r requirements.txt
 ```
 
-### 2. Run Training
+### 3. Run Training
 
 #### Environment with Deer
 
@@ -40,7 +49,7 @@ Training runs for 30,000,000 steps (default setting). During training, results a
 - Policy files: `policy/`
 - Tensorboard logs: `tensorboard_log/`
 
-### 3. Check Results
+### 4. Check Results
 
 To view the training progress, start Tensorboard from the parent directory of `apple_deer_AROB`:
 
@@ -116,7 +125,7 @@ ego = PPO.load("policy/<experiment_name>/policy_ego")
 partner0 = PPO.load("policy/<experiment_name>/policy_partner0")
 ```
 
-### 4. Test Trained Policies
+### 5. Test Trained Policies
 
 After training, you can test the trained policies and generate GIF animations using `test.py`:
 
