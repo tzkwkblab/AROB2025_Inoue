@@ -1,4 +1,4 @@
-# apple_deer_AROB
+# AROB2025_Inoue
 
 Multi-agent reinforcement learning experimental environment using the Apple Deer environment.
 
@@ -46,11 +46,11 @@ This will skip downloading Git LFS files during installation, which is sufficien
 
 ### 3. Run Training
 
-**Important:** Make sure you are in the `apple_deer_AROB` directory when running the training scripts.
+**Important:** Make sure you are in the `AROB2025_Inoue` directory when running the training scripts.
 
 #### Environment with Deer
 
-Execute `train_AROB.py` from the `apple_deer_AROB` directory to start training in an environment that includes deer:
+Execute `train_AROB.py` from the `AROB2025_Inoue` directory to start training in an environment that includes deer:
 
 ```bash
 cd AROB2025_Inoue
@@ -66,18 +66,18 @@ cd AROB2025_Inoue
 python train_AROB_nodeer.py
 ```
 
-**Note:** If you get a `ModuleNotFoundError: No module named 'apple_deer_AROB'` error, make sure you are running the script from inside the `apple_deer_AROB` directory, not from the parent `AROB2025_Inoue` directory.
+**Note:** If you get a `ModuleNotFoundError: No module named 'AROB2025_Inoue'` error, make sure you are running the script from inside the `AROB2025_Inoue` directory, not from the parent `AROB2025_Inoue` directory.
 
 **Note:** The main difference is that `train_AROB_nodeer.py` uses the `apple_deer_nodeer` environment which does not include deer.
 
-Training runs for 30,000,000 steps (default setting). During training, results are saved to the following directories (relative to the parent directory of `apple_deer_AROB`):
+Training runs for 30,000,000 steps (default setting). During training, results are saved to the following directories (relative to the parent directory of `AROB2025_Inoue`):
 
 - Policy files: `policy/`
 - Tensorboard logs: `tensorboard_log/`
 
 ### 4. Check Results
 
-To view the training progress, start Tensorboard from the parent directory of `apple_deer_AROB`:
+To view the training progress, start Tensorboard from the parent directory of `AROB2025_Inoue`:
 
 ```bash
 tensorboard --logdir=tensorboard_log/ --port=<PORT_NUMBER>
@@ -85,7 +85,7 @@ tensorboard --logdir=tensorboard_log/ --port=<PORT_NUMBER>
 
 Replace `<PORT_NUMBER>` with an available port number (e.g., 6006). Access `http://localhost:<PORT_NUMBER>` in your browser to view the learning curves.
 
-After training completes, policy files are saved in subdirectories under `policy/` (relative to the parent directory of `apple_deer_AROB`). The exact path depends on the configuration in `train_AROB.py`:
+After training completes, policy files are saved in subdirectories under `policy/` (relative to the parent directory of `AROB2025_Inoue`). The exact path depends on the configuration in `train_AROB.py`:
 
 - `policy_ego`: Ego agent's policy
 - `policy_partner0`: Partner agent's policy
@@ -129,7 +129,7 @@ The following parameters can be configured in `train_AROB.py`:
 
 #### Training Results Storage
 
-Training results are saved to the following directories (relative to the parent directory of `apple_deer_AROB`). The exact subdirectory paths depend on the configuration in `train_AROB.py`:
+Training results are saved to the following directories (relative to the parent directory of `AROB2025_Inoue`). The exact subdirectory paths depend on the configuration in `train_AROB.py`:
 
 - Policies: `policy/<experiment_name>/`
   - `policy_ego`: Ego agent's policy
@@ -143,7 +143,7 @@ After training completes, you can load and use policies as follows:
 ```python
 from stable_baselines3 import PPO
 
-# Load ego agent's policy (path is relative to parent directory of apple_deer_AROB)
+# Load ego agent's policy (path is relative to parent directory of AROB2025_Inoue)
 # Replace <experiment_name> with the actual experiment directory name
 ego = PPO.load("policy/<experiment_name>/policy_ego")
 
@@ -156,15 +156,15 @@ partner0 = PPO.load("policy/<experiment_name>/policy_partner0")
 After training, you can test the trained policies and generate GIF animations using `test.py`:
 
 ```bash
-cd apple_deer_AROB
+cd AROB2025_Inoue
 python test.py
 ```
 
 This script will:
-- Load trained policies from `policy/` directory (relative to the parent directory of `apple_deer_AROB`)
+- Load trained policies from `policy/` directory (relative to the parent directory of `AROB2025_Inoue`)
 - Run test episodes with the trained agents
 - Generate GIF animations showing agent behavior
-- Save GIFs to `GIF/` directory (relative to the parent directory of `apple_deer_AROB`)
+- Save GIFs to `GIF/` directory (relative to the parent directory of `AROB2025_Inoue`)
 
 #### Test Script Configuration
 
@@ -181,7 +181,7 @@ You can modify `test.py` to customize the test settings:
 ## Directory Structure
 
 ```
-apple_deer_AROB/
+AROB2025_Inoue/
 ├── apple_deer/          # Apple Deer environment implementation
 │   ├── apple_deer.py    # Main environment class
 │   ├── apple_deer_base.py
