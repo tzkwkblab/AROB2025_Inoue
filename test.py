@@ -7,13 +7,44 @@ This script loads trained policies and generates GIF animations of agent behavio
 import os
 import sys
 from pathlib import Path
+import importlib
+import importlib.util
+import types
 
-# Add parent directory to path (to enable importing apple_deer_AROB)
-parent_dir = Path(__file__).parent.parent
-sys.path.insert(0, str(parent_dir))
+# Setup module path
+script_dir = Path(__file__).resolve().parent
+if str(script_dir) not in sys.path:
+    sys.path.insert(0, str(script_dir))
+
+# Setup apple_deer_AROB module
+module_name = 'apple_deer_AROB'
+try:
+    importlib.import_module(module_name)
+except (ImportError, ModuleNotFoundError):
+    module = types.ModuleType(module_name)
+    module.__path__ = [str(script_dir)]
+    sys.modules[module_name] = module
+    
+    # Load apple_deer submodule
+    if (script_dir / 'apple_deer' / '__init__.py').exists():
+        try:
+            module.apple_deer = importlib.import_module(f'{script_dir.name}.apple_deer')
+        except (ImportError, ModuleNotFoundError):
+            pass
+    
+    # Load apple_deer_v0
+    spec = importlib.util.spec_from_file_location(f'{module_name}.apple_deer_v0', 
+                                                  script_dir / 'apple_deer_v0.py')
+    if spec and spec.loader:
+        submodule = importlib.util.module_from_spec(spec)
+        submodule.__package__ = module_name
+        spec.loader.exec_module(submodule)
+        module.apple_deer_v0 = submodule
 
 from apple_deer_AROB import apple_deer_v0 as e
 from stable_baselines3 import PPO
+
+repo_base_dir = script_dir  # Base directory for paths
 import supersuit as ss
 from supersuit.multiagent_wrappers import padding_wrappers as pw
 from pantheonrl.common.agents import OnPolicyAgent
@@ -26,8 +57,8 @@ from array2gif import write_gif
 gif_num = 6  #10
 
 for m in range(gif_num):
-    # Set paths relative to parent directory
-    base_dir = parent_dir
+    # Set paths relative to base directory
+    base_dir = repo_base_dir
     policy_dir = str(base_dir / "policy/")
     gif_dir = str(base_dir / "GIF/")
 
