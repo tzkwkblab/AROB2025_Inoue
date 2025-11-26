@@ -23,7 +23,7 @@ cd AROB2025_Inoue
 Install the required packages using the following command:
 
 ```bash
-cd apple_deer_AROB
+cd AROB2025_Inoue
 pip install -r requirements.txt
 ```
 
@@ -38,7 +38,7 @@ Error downloading object: ... This repository exceeded its LFS budget.
 This is a known issue with the PantheonRL repository's Git LFS storage quota. To work around this, install dependencies with the `GIT_LFS_SKIP_SMUDGE` environment variable set:
 
 ```bash
-cd apple_deer_AROB
+cd AROB2025_Inoue
 GIT_LFS_SKIP_SMUDGE=1 pip install -r requirements.txt
 ```
 
@@ -53,7 +53,7 @@ This will skip downloading Git LFS files during installation, which is sufficien
 Execute `train_AROB.py` from the `apple_deer_AROB` directory to start training in an environment that includes deer:
 
 ```bash
-cd apple_deer_AROB
+cd AROB2025_Inoue
 python train_AROB.py
 ```
 
@@ -62,7 +62,7 @@ python train_AROB.py
 For training in an environment without deer, use `train_AROB_nodeer.py`:
 
 ```bash
-cd apple_deer_AROB
+cd AROB2025_Inoue
 python train_AROB_nodeer.py
 ```
 
