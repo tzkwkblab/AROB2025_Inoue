@@ -2,6 +2,11 @@
 
 Multi-agent reinforcement learning experimental environment using the Apple Deer environment.
 
+## Requirements
+
+- Python 3.7 or higher (Python 3.8+ recommended)
+- See `requirements.txt` for package dependencies
+
 ## Reproduction Steps
 
 ### 1. Clone the Repository
@@ -10,7 +15,7 @@ Clone the repository to your local machine:
 
 ```bash
 git clone https://github.com/tzkwkblab/AROB2025_Inoue.git
-cd AROB2025_Inoue/apple_deer_AROB
+cd AROB2025_Inoue
 ```
 
 ### 2. Install Dependencies
@@ -22,7 +27,26 @@ cd apple_deer_AROB
 pip install -r requirements.txt
 ```
 
+#### Troubleshooting: Git LFS Error
+
+If you encounter an error related to Git LFS (Large File Storage) when installing PantheonRL, such as:
+
+```
+Error downloading object: ... This repository exceeded its LFS budget.
+```
+
+This is a known issue with the PantheonRL repository's Git LFS storage quota. To work around this, install dependencies with the `GIT_LFS_SKIP_SMUDGE` environment variable set:
+
+```bash
+cd apple_deer_AROB
+GIT_LFS_SKIP_SMUDGE=1 pip install -r requirements.txt
+```
+
+This will skip downloading Git LFS files during installation, which is sufficient for most use cases. The missing LFS files are typically only needed for specific datasets that are not required for the Apple Deer environment.
+
 ### 3. Run Training
+
+**Important:** Make sure you are in the `apple_deer_AROB` directory when running the training scripts.
 
 #### Environment with Deer
 
@@ -41,6 +65,8 @@ For training in an environment without deer, use `train_AROB_nodeer.py`:
 cd apple_deer_AROB
 python train_AROB_nodeer.py
 ```
+
+**Note:** If you get a `ModuleNotFoundError: No module named 'apple_deer_AROB'` error, make sure you are running the script from inside the `apple_deer_AROB` directory, not from the parent `AROB2025_Inoue` directory.
 
 **Note:** The main difference is that `train_AROB_nodeer.py` uses the `apple_deer_nodeer` environment which does not include deer.
 
