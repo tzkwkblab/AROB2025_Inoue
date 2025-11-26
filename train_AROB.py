@@ -6,8 +6,42 @@ This script sets up a multi-agent reinforcement learning environment and trains 
 import os
 import sys
 from pathlib import Path
-parent_dir = Path(__file__).parent.parent
-sys.path.insert(0, str(parent_dir))
+import importlib
+import importlib.util
+import types
+
+# Setup module path
+script_dir = Path(__file__).resolve().parent
+if str(script_dir) not in sys.path:
+    sys.path.insert(0, str(script_dir))
+
+# Setup apple_deer_AROB module
+module_name = 'apple_deer_AROB'
+try:
+    importlib.import_module(module_name)
+except (ImportError, ModuleNotFoundError):
+    module = types.ModuleType(module_name)
+    module.__path__ = [str(script_dir)]
+    sys.modules[module_name] = module
+    
+    # Load apple_deer submodule
+    if (script_dir / 'apple_deer' / '__init__.py').exists():
+        try:
+            module.apple_deer = importlib.import_module(f'{script_dir.name}.apple_deer')
+        except (ImportError, ModuleNotFoundError):
+            pass
+    
+    # Load apple_deer_v0 and tensorboard_callback
+    for file_name, attr_name in [('apple_deer_v0.py', 'apple_deer_v0'),
+                                  ('tensorboard_callback.py', 'tensorboard_callback')]:
+        file_path = script_dir / file_name
+        if file_path.exists():
+            spec = importlib.util.spec_from_file_location(f'{module_name}.{attr_name}', file_path)
+            if spec and spec.loader:
+                submodule = importlib.util.module_from_spec(spec)
+                submodule.__package__ = module_name
+                spec.loader.exec_module(submodule)
+                setattr(module, attr_name, submodule)
 
 from apple_deer_AROB import apple_deer_v0 as e
 from apple_deer_AROB.tensorboard_callback import TensorboardCallback as TbCa
@@ -17,10 +51,10 @@ from supersuit.multiagent_wrappers import padding_wrappers as pw
 from pantheonrl.common.agents import OnPolicyAgent
 from pantheonrl.envs.pettingzoo import PettingZooAECWrapper
 
-# Set paths relative to parent directory
-base_dir = parent_dir
-policy_dir = str(base_dir / "policy/")
-tensorboard_dir = str(base_dir / "tensorboard_log/")
+# Set paths relative to base directory
+repo_base_dir = script_dir
+policy_dir = str(repo_base_dir / "policy/")
+tensorboard_dir = str(repo_base_dir / "tensorboard_log/")
 
 # Environment configuration
 # agents_dict: Defines agent properties (color, number, attack range, health, etc.)
