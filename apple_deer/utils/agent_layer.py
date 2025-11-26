@@ -24,12 +24,12 @@ class AgentLayer:
         """
 
         self.allies = allies
-        self.wait_respawn = []  # リスポーン待機列
+        self.wait_respawn = []  # Respawn waiting queue
         self.nagents = len(allies)
         self.global_state = np.zeros((xs, ys), dtype=np.int32)
-        self.invincible = invincible    # エージェントが不死か否か
+        self.invincible = invincible    # Whether the agent is invincible
         self.agent_respawn = agent_respawn
-        self.sequential_respawn = sequential_respawn    # 即時リスポーンするか否か
+        self.sequential_respawn = sequential_respawn    # Whether to respawn immediately
 
     def n_agents(self):
         return len(self.allies)
@@ -66,7 +66,7 @@ class AgentLayer:
                 continue
             return self.allies[i].attack_and_signal
 
-    #自分以外のエージェントの位置を返す
+    # Return position of other agents
     def get_another_agent_position(self, agent_idx):
         if agent_idx == 0:
             another_agent_pos = self.get_position(1)
@@ -74,8 +74,8 @@ class AgentLayer:
             another_agent_pos = self.get_position(0)
         return another_agent_pos
 
-    #自分と自分以外のエージェントの位置を特定して返す
-    #現状エージェント二人まで
+    # Identify and return positions of self and other agents
+    # Currently supports up to two agents
     def new_get_positions(self, agent_idx):
         if agent_idx == 0:
             given_agent_pos = self.get_position(0)
@@ -89,7 +89,7 @@ class AgentLayer:
         return self.allies[agent_idx].nactions()
 
     def death_agent(self, agent_idx):
-        # 即時リスポーンならalliesに、全死後リスポーンならwait_respawnにリスポーン
+        # Respawn to allies if immediate respawn, otherwise to wait_respawn after all agents die
         if self.sequential_respawn and self.agent_respawn:
             self.allies[agent_idx].respawn()
         else:
@@ -97,7 +97,7 @@ class AgentLayer:
                 self.wait_respawn.append(deepcopy(self.allies[agent_idx]))
                 self.wait_respawn[-1].respawn()
             self.remove_agent(agent_idx)
-        # 全死ならwait_respawnをalliesにしてwait_respawnを初期化
+        # If all agents die, set wait_respawn to allies and initialize wait_respawn
         if self.agent_respawn and (self.n_agents == 0):
             self.allies = deepcopy(self.wait_respawn)
             self.wait_respawn = []
@@ -139,20 +139,20 @@ class AgentLayer:
 
 
     def check_hit(self, agent_id, deer_layer):
-        if not self.allies[agent_id].attack_and_signal: # そもそも攻撃していなければFalse
+        if not self.allies[agent_id].attack_and_signal: # Return False if not attacking at all
             self.allies[agent_id].attack_hit = False
             return
         deer_pos_list = [deer.current_position() for deer in deer_layer.allies]
         agent_pos = self.get_position(agent_id)
-        for deer_pos in deer_pos_list:  # 注: 以下はdeerが1体であることが前提の処理
-            # agentの攻撃範囲にdeerがいればattack_hitをTrueに
-            # 注: agentの攻撃範囲は3*3のマジックナンバーで実装
+        for deer_pos in deer_pos_list:  # Note: The following processing assumes there is only one deer
+            # Set attack_hit to True if deer is within agent's attack range
+            # Note: Agent's attack range is implemented with a 3*3 magic number
             if (agent_pos[0]-1 <= deer_pos[0] <= agent_pos[0]+1) and (agent_pos[1]-1 <= deer_pos[1] <= agent_pos[1]+1):
                 self.allies[agent_id].attack_hit = True
             else:
                 self.allies[agent_id].attack_hit = False
 
-    #自分以外のエージェントが攻撃を行ったかどうかを返す
+    # Return whether other agents have attacked
     def check_another_agent_attack(self, agent_idx) :
         if agent_idx == 0:
             return self.allies[1].attack_and_signal

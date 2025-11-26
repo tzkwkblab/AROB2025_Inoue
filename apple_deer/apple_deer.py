@@ -208,7 +208,7 @@ class raw_env(AECEnv, EzPickle):
         #print(self.rewards)
         #print("END")
 
-    #nut無しの環境用の報酬計算
+    # Reward calculation for environment without nuts
 
     def sum_alter_reward(self, agent_type, agent_id, env):
         hit_r = dict(zip(self.agents, [(0) for _ in self.agents]))

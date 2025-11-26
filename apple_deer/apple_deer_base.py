@@ -27,7 +27,7 @@ class Plainworld:
         single_attack_reward = 1,
         double_attack_reward = 5,
 
-        #attack時のbadreward
+        # Bad reward when attacking
         attack_bad_reward = 0,
 
         apple_reward = 10,
@@ -47,7 +47,7 @@ class Plainworld:
         self.single_attack_reward = single_attack_reward
         self.double_attack_reward = double_attack_reward
 
-        #attack時のbadreward
+        # Bad reward when attacking
         self.attack_bad_reward = attack_bad_reward
 
         self.apple_reward = apple_reward
@@ -104,12 +104,12 @@ class Plainworld:
         self.agents_controllers = {}
         for name in self.agents_dict:
             if self.agents_dict[name]['freeze']:
-                self.agents_controllers[name] = SingleActionPolicy(4)  # 単一アクション
+                self.agents_controllers[name] = SingleActionPolicy(4)  # Single action
             else:
                 if self.agents_dict[name]['controller'] != None:
-                    self.agents_controllers[name] = self.agents_dict[name]['controller']  # 指定したコントローラー
+                    self.agents_controllers[name] = self.agents_dict[name]['controller']  # Specified controller
                 else:
-                    self.agents_controllers[name] = RandomPolicy(self.n_act_agents[name], self.np_random)  # ランダム
+                    self.agents_controllers[name] = RandomPolicy(self.n_act_agents[name], self.np_random)  # Random
 
         self.current_agent_layer = np.zeros((self.x_size, self.y_size), dtype=np.int32)
 
@@ -247,7 +247,7 @@ class Plainworld:
             if name not in self.move_agent_name:
                 self.model_state[i+1] = self.agents_layers[name].get_state_matrix()
 
-    # 描画
+    # Drawing
     def draw_model_state(self):
         # -1 is building pixel flag
         x_len, y_len = self.model_state[0].shape
@@ -441,7 +441,7 @@ class Plainworld:
         pygame.image.save(subcapture, file_name)
 
     @property
-    # ここ変えれる
+    # This can be changed
     def is_terminal(self):
         #if self.agents_layers['evaders'].n_agents() == 0:
         #    return True
@@ -452,7 +452,7 @@ class Plainworld:
         for name in self.move_agent_name:
             n += self.agents_layers[name].n_agents()
         return n
-    #observe変更
+    # Observe change
     def safely_observe(self, agent_type, i):
         agent_layer = self.agents_layers[agent_type]
         size = self.agents_dict[agent_type]['num']
@@ -564,7 +564,7 @@ class Plainworld:
         return [x,y]
 
 
-    #視界内に相方エージェントがいるかどうかをチェック
+    # Check if partner agent is within observation range
     def check_agent_in_obs(self, agent_idx, agent_layer): 
         xp, yp = agent_layer.get_position(agent_idx)
         obs_xlow, obs_xhi, obs_ylow, obs_yhi = self.plot_obs_clip(agent_layer, agent_idx)
@@ -593,16 +593,16 @@ class Plainworld:
     def move_signal_direction_to_pos(self, agent_layer, agent_idx, action):
         signal_direction = self.get_signal_direction(agent_idx, agent_layer)
 
-        if(-1 * math.pi) <= signal_direction < (-3/4 * math.pi):   # 左
-            action = 0 #左に動かす
-        elif(-3/4 * math.pi) <= signal_direction  < (-1/4 * math.pi):   # 下
-            action = 3 #下に動かす
-        elif (-1/4 * math.pi) <= signal_direction  < (1/4 * math.pi):   # 右
-            action = 1 #右に動かす
-        elif (1/4 * math.pi) <= signal_direction < (3/4 * math.pi):   # 上
-            action = 2 #上に動かす
-        elif (3/4 * math.pi) <= signal_direction  <=  (1 * math.pi):   # 左
-            action = 0 #左に動かす
+        if(-1 * math.pi) <= signal_direction < (-3/4 * math.pi):   # Left
+            action = 0 # Move left
+        elif(-3/4 * math.pi) <= signal_direction  < (-1/4 * math.pi):   # Down
+            action = 3 # Move down
+        elif (-1/4 * math.pi) <= signal_direction  < (1/4 * math.pi):   # Right
+            action = 1 # Move right
+        elif (1/4 * math.pi) <= signal_direction < (3/4 * math.pi):   # Up
+            action = 2 # Move up
+        elif (3/4 * math.pi) <= signal_direction  <=  (1 * math.pi):   # Left
+            action = 0 # Move left
         return action
 
     def correct_signal_action(self, agent_id, agent_layer, action):
